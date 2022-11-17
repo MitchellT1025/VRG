@@ -16,35 +16,31 @@ public class gunShoot : MonoBehaviour
     public Transform gunHole;
 
 
-    float fireElapsedTime = 1;
+    float fireElapsedTime;
     public float fireDelay = 1f;
     public float damage = 5f;
+    private bool fireReady;
 
     
 
     void Start()
     {
-
+        Debug.Log(gameObject.name);
         source = GetComponent<AudioSource>();
-
+        fireReady = true;
     }
 
     void Update()
     {
+        if(!fireReady) fireElapsedTime += Time.deltaTime;
+        if (fireElapsedTime >= fireDelay) fireReady = true;
 
     }
 
 
-    void FireRate()
+    public void FireRate()
     {
-        fireElapsedTime += Time.deltaTime;
-        //if your last shot was less than the timer then you cant shoot yet
-
-        /* if (Input.GetMouseButtonDown(0) && fireElapsedTime >= fireDelay)
-         {
-             fireElapsedTime = 1;
-             Shoot();
-         }*/
+        if (fireReady) Shoot();
     }
 
    public void Shoot()
@@ -66,10 +62,8 @@ public class gunShoot : MonoBehaviour
 
             }
         }
-
-
-
-
+        fireElapsedTime = 0;
+        fireReady = false;
 
     }
 

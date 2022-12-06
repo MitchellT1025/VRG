@@ -6,42 +6,56 @@ public class EnemyMove : MonoBehaviour
 {
 
 
-    public float delta = 1.5f;  // Amount to move left and right from the start point
-    public float speed = 2.0f;
-    private Vector3 startPos;
-   public bool Enemy = true;
-
+    private float riseSpeed;
+    private float decendSpeed;
+    private Vector3 startPos, endPos;
+    private float currentTime, lifeTime;
+    public float heightAbove;
+    private bool isAboveGround;
+    
     void Start()
     {
         startPos = transform.position;
-       
+        endPos = new Vector3(transform.position.x, transform.position.y + heightAbove, transform.position.z);
+        lifeTime = Random.Range(1, 5);
+        riseSpeed = Random.Range(.5f, 2);
+        decendSpeed = Random.Range(.5f, 2);
     }
 
     void Update()
     {
-        Move();
-       /* if(Enemy = true)
+        currentTime += Time.deltaTime;
+        if(currentTime >= lifeTime)
         {
+            isAboveGround = true;
+        }
+        if (!isAboveGround)
+        {
+            transform.position = Vector3.Lerp(transform.position, endPos, riseSpeed * Time.deltaTime);
+        }
+        else
+        {
+            transform.position = Vector3.Lerp(transform.position, startPos, decendSpeed * Time.deltaTime);
             
-            Enemy = false;
-        }*/
+            if(Vector3.Distance(startPos, transform.position) <= .1f)
+            {
+                
+                currentTime = 0;
+                isAboveGround = false;
+            }
+        }
     }
     public void Move()
     {
-        Vector3 v = startPos;
-        v.y += delta * speed; // * Time.deltaTime;
-        transform.position = v; 
+        
 
-        /*if (this.transform.y != 1.5)
-        {
-            this.transform.y++;
-            Enemy.true;
-        }
-        else if (this.transform.y == 1.5)
-        {
-            Enemy = false;
-        }*/
+        
     }
-    
+    private IEnumerator DummyBob()
+    {
+       
+        yield return new WaitForSeconds(lifeTime);
+       
+    }
 }
 
